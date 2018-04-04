@@ -32,22 +32,17 @@ export const store = new Vuex.Store({
         editStore(state, password){
             this.state.passwords.push(password);
         },
-        inputToken(state, token){
-
-            this.state.token = token;
-            
-        }
 
     },
     actions:{
         getPasswordsApi(context){
             
-            axios.get('http://localhost:3000/passwords').then((response) => {
+            axios.get('/v1/passwords?page=2&limit=10').then((response) => {
             context.commit('InputPasswords', response.data) 
             })
         },
         patchStore(context, password){
-            axios.patch('http://localhost:3000/passwords/'+password.id, 
+            axios.patch('/v1/passwords/'+password.id, 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -58,7 +53,7 @@ export const store = new Vuex.Store({
                     })
         },
         createStore(context, password){
-            axios.post('http://localhost:3000/passwords/', 
+            axios.post('/v1/passwords', 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -78,10 +73,10 @@ export const store = new Vuex.Store({
               const user = result.user;
               firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
                 console.log(idToken);
-                axios.post('http://localhost:3000/auth',{
+                axios.post('/v1/auth',{
                     "token": idToken
                 }).then( 
-                    router.push('/List')
+                    this.$router.push('/List')
                   )
                 
               })
@@ -89,7 +84,7 @@ export const store = new Vuex.Store({
               .catch(function(error) {
                 // Handle error
               });
-              context.commit('inputToken', user.refreshToken);
+              
               
                
             })
