@@ -42,12 +42,12 @@ export const store = new Vuex.Store({
     actions:{
         getPasswordsApi(context){
             
-            axios.get('/v1/passwords').then((response) => {
+            axios.get('http://localhost:3000/passwords').then((response) => {
             context.commit('InputPasswords', response.data) 
             })
         },
         patchStore(context, password){
-            axios.patch('/v1/passwords'+password.id, 
+            axios.patch('http://localhost:3000/passwords/'+password.id, 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -58,7 +58,7 @@ export const store = new Vuex.Store({
                     })
         },
         createStore(context, password){
-            axios.post('/v1/passwords', 
+            axios.post('http://localhost:3000/passwords/', 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -77,10 +77,11 @@ export const store = new Vuex.Store({
               firebase.auth().signInWithPopup(provider).then(function(result) {
               const user = result.user;
               firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-                axios.post('/v1/auth',{
+                console.log(idToken);
+                axios.post('http://localhost:3000/auth',{
                     "token": idToken
                 }).then( 
-                    this.$router.push(/* ACA TENGO EL PROBLEMA */)
+                    router.push('/List')
                   )
                 
               })
