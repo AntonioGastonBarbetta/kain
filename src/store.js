@@ -26,23 +26,20 @@ export const store = new Vuex.Store({
     },
     mutations:{
         InputPasswords(state, passwords){
-         
             this.state.passwords = passwords;
         },
         editStore(state, password){
             this.state.passwords.push(password);
         },
-
     },
     actions:{
         getPasswordsApi(context){
-            
-            axios.get('/v1/passwords?page=2&limit=10').then((response) => {
+            axios.get('https://kain5.martincastroalvarez.com:8000/v1/passwords?page=2&limit=10').then((response) => {
             context.commit('InputPasswords', response.data) 
             })
         },
         patchStore(context, password){
-            axios.patch('/v1/passwords/'+password.id, 
+            axios.patch('https://kain5.martincastroalvarez.com:8000/v1/passwords/'+password.id, 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -53,7 +50,7 @@ export const store = new Vuex.Store({
                     })
         },
         createStore(context, password){
-            axios.post('/v1/passwords', 
+            axios.post('https://kain5.martincastroalvarez.com:8000/v1/passwords', 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -73,7 +70,7 @@ export const store = new Vuex.Store({
               const user = result.user;
               firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
                 console.log(idToken);
-                axios.post('/v1/auth',{
+                axios.post('https://kain5.martincastroalvarez.com:8000/v1/auth',{
                     "token": idToken
                 }).then( 
                     this.$router.push('/List')
