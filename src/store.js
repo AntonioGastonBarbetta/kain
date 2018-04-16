@@ -8,11 +8,15 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        Url: "https://kain5.martincastroalvarez.com:8000",
         registrations:[],
         passwords:[],
         token:""
     },
     getters:{
+        getUrl(state){
+            return state.Url;
+        },
         getPasswords(state){
             return state.passwords;
         },
@@ -33,6 +37,7 @@ export const store = new Vuex.Store({
         },
     },
     actions:{
+<<<<<<< HEAD
         getPasswordsApi(context){
             axios.get('https://kain5.martincastroalvarez.com:8000/v1/passwords?page=2&limit=10').then((response) => {
             context.commit('InputPasswords', response.data) 
@@ -40,6 +45,16 @@ export const store = new Vuex.Store({
         },
         patchStore(context, password){
             axios.patch('https://kain5.martincastroalvarez.com:8000/v1/passwords/'+password.id, 
+=======
+        getPasswordsApi(context, getters){
+            
+            axios.get(getters.getUrl+'/v1/passwords?page=2&limit=10').then((response) => {
+            context.commit('InputPasswords', response.data) 
+            })
+        },
+        patchStore(context, password, getters){
+            axios.patch(getters.getUrl+'/v1/passwords/'+password.id, 
+>>>>>>> 3e5af17dbcb91b2d8cd73b6d4bbf17721ce57356
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -49,8 +64,13 @@ export const store = new Vuex.Store({
                         }
                     })
         },
+<<<<<<< HEAD
         createStore(context, password){
             axios.post('https://kain5.martincastroalvarez.com:8000/v1/passwords', 
+=======
+        createStore(context, password, getters){
+            axios.post(getters.getUrl+'/v1/passwords', 
+>>>>>>> 3e5af17dbcb91b2d8cd73b6d4bbf17721ce57356
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -63,14 +83,18 @@ export const store = new Vuex.Store({
                        
                     )
         },
-        authenticate(context){
+        authenticate(context, getters){
             const provider = new firebase.auth.GoogleAuthProvider();
       
               firebase.auth().signInWithPopup(provider).then(function(result) {
               const user = result.user;
               firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
                 console.log(idToken);
+<<<<<<< HEAD
                 axios.post('https://kain5.martincastroalvarez.com:8000/v1/auth',{
+=======
+                axios.post(getters.getUrl+'/v1/auth',{
+>>>>>>> 3e5af17dbcb91b2d8cd73b6d4bbf17721ce57356
                     "token": idToken
                 }).then( 
                     this.$router.push('/List')
