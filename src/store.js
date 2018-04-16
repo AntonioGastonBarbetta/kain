@@ -8,11 +8,15 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        Url: "https://kain5.martincastroalvarez.com:8000",
         registrations:[],
         passwords:[],
         token:""
     },
     getters:{
+        getUrl(state){
+            return state.Url;
+        },
         getPasswords(state){
             return state.passwords;
         },
@@ -35,14 +39,14 @@ export const store = new Vuex.Store({
 
     },
     actions:{
-        getPasswordsApi(context){
+        getPasswordsApi(context, getters){
             
-            axios.get('/v1/passwords?page=2&limit=10').then((response) => {
+            axios.get(getters.getUrl+'/v1/passwords?page=2&limit=10').then((response) => {
             context.commit('InputPasswords', response.data) 
             })
         },
-        patchStore(context, password){
-            axios.patch('/v1/passwords/'+password.id, 
+        patchStore(context, password, getters){
+            axios.patch(getters.getUrl+'/v1/passwords/'+password.id, 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -52,8 +56,8 @@ export const store = new Vuex.Store({
                         }
                     })
         },
-        createStore(context, password){
-            axios.post('/v1/passwords', 
+        createStore(context, password, getters){
+            axios.post(getters.getUrl+'/v1/passwords', 
                     {
                         "tags": {
                             "username": password.tags.username,
@@ -66,14 +70,14 @@ export const store = new Vuex.Store({
                        
                     )
         },
-        authenticate(context){
+        authenticate(context, getters){
             const provider = new firebase.auth.GoogleAuthProvider();
       
               firebase.auth().signInWithPopup(provider).then(function(result) {
               const user = result.user;
               firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
                 console.log(idToken);
-                axios.post('/v1/auth',{
+                axios.post(getters.getUrl+'/v1/auth',{
                     "token": idToken
                 }).then( 
                     this.$router.push('/List')
